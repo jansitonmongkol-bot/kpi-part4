@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บันทึกข้อมูล - ระบบบันทึกตัวชี้วัด</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <!-- ** NEW: Include config.js first ** -->
+    <script src="./javascripts/config.js"></script>
+</head>
+
+<body class="record-page">
+    <header class="home-header">
+        <div class="header-title">
+            <a href="home.html" class="header-link">
+                <h1>ตัวชี้วัด PART 4</h1>
+            </a>
+        </div>
+        <nav class="top-nav">
+            <div id="userInfo" class="user-info-display">
+                <i class="fas fa-spinner fa-spin"></i> กำลังโหลด...
+            </div>
+            <button id="logoutButton" class="btn btn-danger-outline">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>ออกจากระบบ</span>
+            </button>
+        </nav>
+    </header>
+    <main class="record-main-content">
+        <div class="record-container">
+            <h2><i class="fas fa-clipboard-list"></i> การบันทึกข้อมูล</h2>
+            <div id="recordMessage" class="message-area"></div>
+            <form id="recordForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="kpiDropdownButton">ตัวชี้วัด</label>
+                        <div class="relative">
+                            <button id="kpiDropdownButton" type="button"
+                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-between w-full">
+                                <span id="kpiDropdownLabel">-- กรุณาเลือกตัวชี้วัด --</span>
+                                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m1 1 4 4 4-4" />
+                                </svg>
+                            </button>
+                            <div id="kpiDropdownMenu"
+                                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-full absolute mt-1">
+                                <ul class="py-2 text-sm text-gray-700" id="kpiList"></ul>
+                            </div>
+                        </div>
+                        <input type="hidden" id="kpiSelectValue" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="recordDate">วันที่บันทึกข้อมูล</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                </svg>
+                            </div>
+                            <input datepicker datepicker-format="yyyy-mm-dd" id="recordDate" type="date"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
+                                placeholder="เลือกวันที่" required>
+                        </div>
+                    </div>
+                </div>
+                <div id="kpiDetailContainer"></div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        <span>บันทึกข้อมูล</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <div id="statusModal" class="status-modal">
+        <div class="status-modal-content">
+            <span class="close-status-button">&times;</span>
+            <div id="statusIcon"></div>
+            <h3 id="statusTitle"></h3>
+            <p id="statusMessage"></p>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script src="./javascripts/record.js"></script>
+</body>
+
+</html>

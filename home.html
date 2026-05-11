@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน้าหลัก - ระบบบันทึกตัวชี้วัด</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- ** NEW: Include config.js first ** -->
+    <script src="./javascripts/config.js"></script>
+</head>
+
+<body class="home-page">
+
+    <header class="home-header">
+        <div class="header-title">
+            <h1>ตัวชี้วัด PART 4</h1>
+        </div>
+        <nav class="top-nav">
+            <div id="userInfo" class="user-info-display">
+                <i class="fas fa-spinner fa-spin"></i> กำลังโหลด...
+            </div>
+            <button id="logoutButton" class="btn btn-danger-outline">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>ออกจากระบบ</span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="home-main-content">
+        <div class="menu-grid">
+            <a href="./dashboard.html" class="menu-card">
+                <div class="menu-icon-container"><i class="fas fa-chart-pie menu-icon"></i></div>
+                <h2>Dashboard</h2>
+            </a>
+            <a href="./record.html" class="menu-card">
+                <div class="menu-icon-container"><i class="fas fa-clipboard-list menu-icon"></i></div>
+                <h2>การบันทึกข้อมูล</h2>
+            </a>
+            <a href="./results.html" class="menu-card">
+                <div class="menu-icon-container"><i class="fas fa-chart-bar menu-icon"></i></div>
+                <h2>การแสดงผล</h2>
+            </a>
+        </div>
+    </main>
+    <script src="./javascripts/home.js"></script>
+</body>
+
+</html>

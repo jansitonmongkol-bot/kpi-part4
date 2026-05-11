@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แสดงผล - ระบบบันทึกตัวชี้วัด</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <!-- ** NEW: Include config.js first ** -->
+    <script src="./javascripts/config.js"></script>
+</head>
+
+<body class="results-page">
+    <header class="home-header">
+        <div class="header-title">
+            <a href="home.html" class="header-link">
+                <h1>ตัวชี้วัด PART 4</h1>
+            </a>
+        </div>
+        <nav class="top-nav">
+            <div id="userInfo" class="user-info-display">
+                <i class="fas fa-spinner fa-spin"></i> กำลังโหลด...
+            </div>
+            <button id="logoutButton" class="btn btn-danger-outline">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>ออกจากระบบ</span>
+            </button>
+        </nav>
+    </header>
+    <main class="results-main-content">
+        <div class="filter-bar">
+            <div class="date-filters">
+                <div class="date-filter-item">
+                    <label for="yearSelect">เลือกปี</label>
+                    <select id="yearSelect"
+                        class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5">
+                    </select>
+                </div>
+                <button id="searchButton" class="btn btn-primary">
+                    <i class="fas fa-search"></i>
+                    <span>ค้นหา</span>
+                </button>
+            </div>
+        </div>
+        <div id="resultsContent" class="results-content results-placeholder">
+            <p class="text-center text-gray-500">กรุณาเลือกปีและกดค้นหาเพื่อแสดงข้อมูล</p>
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script src="./javascripts/result.js"></script>
+</body>
+
+</html>
