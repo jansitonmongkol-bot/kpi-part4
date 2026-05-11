@@ -7,4 +7,5 @@
  * Change this value if your backend API server's address changes.
  */
 // const API_BASE_URL = 'http://localhost:8000';
-const API_BASE_URL = 'http://blossomsara.trueddns.com:33941';
+// config.js
+const API_BASE_URL = 'https://travels-nut-humanities-breeding.trycloudflare.com';
