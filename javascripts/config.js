@@ -8,4 +8,4 @@
  */
 // const API_BASE_URL = 'http://localhost:8000';
 // config.js
-const API_BASE_URL = 'https://travels-nut-humanities-breeding.trycloudflare.com';
+const API_BASE_URL = 'https://ruling-watched-sci-top.trycloudflare.com';
