@@ -8,4 +8,4 @@
  */
 // const API_BASE_URL = 'http://localhost:8000';
 // config.js
-const API_BASE_URL = 'https://ruling-watched-sci-top.trycloudflare.com';
+const API_BASE_URL = 'https://pepper-immigrants-broader-guam.trycloudflare.com';
