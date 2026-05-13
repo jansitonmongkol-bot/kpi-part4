@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>จัดการตัวชี้วัด KPI - Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<script src="javascripts/config.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;--surface:#fff;--surface2:#f7f9ff;--border:#dde3f5;
+  --primary:#3b5bdb;--primary-light:#e8edff;--primary-dark:#2f4ac7;
+  --success:#087f5b;--success-bg:#e6fcf5;--danger:#c92a2a;--danger-bg:#fff5f5;
+  --warning:#e67700;--warning-bg:#fff9db;
+  --text:#1a1d2e;--text2:#5c6185;--text3:#9ba3c0;
+  --radius:10px;--radius-lg:16px;
+  --shadow:0 1px 3px rgba(59,91,219,.08),0 4px 12px rgba(59,91,219,.06);
+}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px}
+
+.header{background:var(--primary);padding:1rem 2rem;display:flex;align-items:center;gap:1rem;box-shadow:0 2px 12px rgba(59,91,219,.3);position:sticky;top:0;z-index:100}
+.header h1{font-size:1.15rem;font-weight:700;color:#fff}
+.header a{margin-left:auto;color:rgba(255,255,255,.8);font-size:13px;text-decoration:none}
+.header a:hover{color:#fff}
+
+.container{max-width:1150px;margin:0 auto;padding:2rem 1.5rem}
+
+/* Alert */
+.alert{padding:.85rem 1.2rem;border-radius:var(--radius);margin-bottom:1.5rem;font-weight:500;font-size:14px;display:flex;align-items:center;gap:10px;border:1px solid;display:none}
+.alert.show{display:flex}
+.alert-success{background:var(--success-bg);border-color:#8ce99a;color:var(--success)}
+.alert-error{background:var(--danger-bg);border-color:#ffa8a8;color:var(--danger)}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.2rem;box-shadow:var(--shadow)}
+.stat-num{font-size:1.8rem;font-weight:700;color:var(--primary);line-height:1}
+.stat-label{font-size:12px;color:var(--text2);margin-top:4px}
+
+/* Layout */
+.layout{display:grid;grid-template-columns:400px 1fr;gap:1.5rem;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
+.card-header{padding:1.1rem 1.5rem;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:.95rem;font-weight:700;color:var(--text)}
+.card-body{padding:1.5rem}
+
+/* Form */
+.form-group{margin-bottom:1rem}
+label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:5px}
+label span{color:#c92a2a}
+input[type=text],input[type=number],select{
+  width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:.6rem .9rem;color:var(--text);font-family:'Sarabun',sans-serif;font-size:14px;
+  transition:border-color .2s,box-shadow .2s
+}
+input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(59,91,219,.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.hint{font-size:12px;color:var(--text3);margin-top:4px}
+.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
+.section-label{font-size:13px;color:var(--text2);font-weight:600;margin-bottom:.75rem}
+
+/* Freq buttons */
+.freq-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.freq-btn{padding:.5rem;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text2);font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;text-align:center}
+.freq-btn.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary)}
+.freq-btn:hover:not(.active){border-color:var(--primary)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:.6rem 1.2rem;border:none;border-radius:var(--radius);font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+.btn-outline{background:transparent;color:var(--text2);border:1.5px solid var(--border)}.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+.btn-danger{background:var(--danger);color:#fff;padding:.4rem .8rem;font-size:12px}.btn-danger:hover{filter:brightness(1.1)}
+.btn-edit{background:var(--warning-bg);color:var(--warning);border:1px solid #ffe066;padding:.4rem .8rem;font-size:12px}.btn-edit:hover{background:#ffe066}
+.btn-full{width:100%;justify-content:center}
+
+/* Edit banner */
+.edit-banner{background:var(--warning-bg);border:1.5px solid #ffe066;border-radius:var(--radius);padding:.75rem 1rem;margin-bottom:1rem;font-size:13px;color:var(--warning);display:none;align-items:center;gap:8px}
+.edit-banner.show{display:flex}
+
+/* Table */
+.table-wrap{overflow-x:auto;max-height:580px;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:var(--surface2);color:var(--text2);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;padding:.85rem 1rem;text-align:left;border-bottom:2px solid var(--border);position:sticky;top:0;white-space:nowrap}
+td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f5f8ff}
+.actions{display:flex;gap:6px}
+
+/* Badge */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge-blue{background:#e8edff;color:#3b5bdb}
+.badge-green{background:#e6fcf5;color:#087f5b}
+.badge-orange{background:#fff4e6;color:#e67700}
+
+/* Empty / Loading */
+.empty{text-align:center;padding:3rem;color:var(--text3)}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Search */
+#searchInput{width:100%;padding:.6rem 1rem;border:1.5px solid var(--border);border-radius:var(--radius);font-family:'Sarabun',sans-serif;font-size:14px;background:var(--surface);color:var(--text)}
+#searchInput:focus{outline:none;border-color:var(--primary)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <i class="fas fa-chart-line" style="color:#fff;font-size:1.2rem"></i>
+  <h1>จัดการตัวชี้วัด KPI</h1>
+  <a href="home.html"><i class="fas fa-arrow-left"></i> กลับหน้าหลัก</a>
+</div>
+
+<div class="container">
+
+  <div id="alert" class="alert"></div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="stat-num" id="stat-total">-</div><div class="stat-label">ทั้งหมด</div></div>
+    <div class="stat"><div class="stat-num" id="stat-monthly">-</div><div class="stat-label">รายเดือน</div></div>
+    <div class="stat"><div class="stat-num" id="stat-quarter">-</div><div class="stat-label">รายไตรมาส</div></div>
+    <div class="stat"><div class="stat-num" id="stat-yearly">-</div><div class="stat-label">รายปี</div></div>
+  </div>
+
+  <div class="layout">
+
+    <!-- ===== FORM ===== -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title" id="form-title"><i class="fas fa-plus"></i> เพิ่มตัวชี้วัดใหม่</span>
+        <button class="btn btn-outline" style="font-size:12px;padding:.35rem .8rem" onclick="resetForm()">รีเซ็ต</button>
+      </div>
+      <div class="card-body">
+        <div class="edit-banner" id="editBanner">
+          <i class="fas fa-exclamation-triangle"></i>
+          กำลังแก้ไข: <strong id="editName"></strong>
+        </div>
+
+        <input type="hidden" id="kpi_id" value="">
+
+        <div class="form-group">
+          <label>ชื่อตัวชี้วัด <span>*</span></label>
+          <input type="text" id="kpi_name" placeholder="เช่น อัตราการติดเชื้อในโรงพยาบาล">
+        </div>
+
+        <hr class="divider">
+        <p class="section-label"><i class="fas fa-calculator"></i> สูตรคำนวณ</p>
+
+        <div class="form-group">
+          <label>ตัวตั้ง (Dividend)</label>
+          <input type="text" id="kpi_dividend" placeholder="เช่น จำนวนผู้ป่วยติดเชื้อ">
+          <p class="hint">ชื่อของตัวตั้งในสูตรคำนวณ</p>
+        </div>
+        <div class="form-group">
+          <label>ตัวหาร (Divisor)</label>
+          <input type="text" id="kpi_divisor" placeholder="เช่น จำนวนผู้ป่วยทั้งหมด">
+          <p class="hint">ชื่อของตัวหารในสูตรคำนวณ</p>
+        </div>
+
+        <hr class="divider">
+        <p class="section-label"><i class="fas fa-bullseye"></i> เป้าหมาย</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>เงื่อนไข <span>*</span></label>
+            <select id="kpi_decition">
+              <option value="<">น้อยกว่า (&lt;)</option>
+              <option value="<=">น้อยกว่าหรือเท่ากับ (≤)</option>
+              <option value=">">มากกว่า (&gt;)</option>
+              <option value=">=">มากกว่าหรือเท่ากับ (≥)</option>
+              <option value="=">เท่ากับ (=)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>ค่าเป้าหมาย <span>*</span></label>
+            <input type="number" id="kpi_target_value" step="0.01" placeholder="เช่น 5.00">
+          </div>
+        </div>
+
+        <hr class="divider">
+        <p class="section-label"><i class="fas fa-calendar"></i> ความถี่การวัด</p>
+
+        <div class="freq-options" id="freqOptions">
+          <button class="freq-btn active" onclick="setFreq('รายเดือน',this)">📅 รายเดือน</button>
+          <button class="freq-btn" onclick="setFreq('รายไตรมาส',this)">📆 รายไตรมาส</button>
+          <button class="freq-btn" onclick="setFreq('รายปี',this)">🗓️ รายปี</button>
+        </div>
+        <input type="hidden" id="kpi_frequency" value="รายเดือน">
+
+        <div style="margin-top:1.5rem">
+          <button class="btn btn-primary btn-full" onclick="saveKpi()">
+            <i class="fas fa-save"></i> <span id="saveBtn-text">เพิ่มตัวชี้วัด</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TABLE ===== -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title"><i class="fas fa-list"></i> รายการตัวชี้วัดทั้งหมด</span>
+        <span id="kpi-count" style="font-size:13px;color:var(--text2)">-</span>
+      </div>
+      <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border)">
+        <input id="searchInput" placeholder="🔍 ค้นหาชื่อตัวชี้วัด..." oninput="filterTable(this.value)">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>ชื่อตัวชี้วัด</th>
+              <th>สูตร</th>
+              <th>เป้าหมาย</th>
+              <th>ความถี่</th>
+              <th>จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="kpiTableBody">
+            <tr><td colspan="6"><div class="empty"><div class="spinner"></div>กำลังโหลด...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const token = localStorage.getItem('accessToken');
+if (!token) window.location.href = 'login.html';
+
+let kpiList = [];
+let selectedFreq = 'รายเดือน';
+
+// ===== Alert =====
+function showAlert(msg, type='success') {
+  const el = document.getElementById('alert');
+  el.className = `alert alert-${type} show`;
+  el.innerHTML = (type==='success' ? '✅ ' : '❌ ') + msg;
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+// ===== Frequency =====
+function setFreq(val, btn) {
+  selectedFreq = val;
+  document.getElementById('kpi_frequency').value = val;
+  document.querySelectorAll('.freq-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ===== Reset Form =====
+function resetForm() {
+  document.getElementById('kpi_id').value = '';
+  document.getElementById('kpi_name').value = '';
+  document.getElementById('kpi_dividend').value = '';
+  document.getElementById('kpi_divisor').value = '';
+  document.getElementById('kpi_decition').value = '<';
+  document.getElementById('kpi_target_value').value = '';
+  setFreq('รายเดือน', document.querySelectorAll('.freq-btn')[0]);
+  document.getElementById('form-title').innerHTML = '<i class="fas fa-plus"></i> เพิ่มตัวชี้วัดใหม่';
+  document.getElementById('saveBtn-text').textContent = 'เพิ่มตัวชี้วัด';
+  document.getElementById('editBanner').classList.remove('show');
+}
+
+// ===== Load KPIs =====
+async function loadKpis() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/kpi/`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) throw new Error();
+    kpiList = await res.json();
+    renderTable(kpiList);
+    updateStats(kpiList);
+  } catch {
+    document.getElementById('kpiTableBody').innerHTML = '<tr><td colspan="6"><div class="empty">❌ โหลดข้อมูลไม่ได้</div></td></tr>';
+  }
+}
+
+// ===== Update Stats =====
+function updateStats(list) {
+  document.getElementById('stat-total').textContent = list.length;
+  document.getElementById('stat-monthly').textContent = list.filter(k=>k.kpi_frequency==='รายเดือน').length;
+  document.getElementById('stat-quarter').textContent = list.filter(k=>k.kpi_frequency==='รายไตรมาส').length;
+  document.getElementById('stat-yearly').textContent = list.filter(k=>k.kpi_frequency==='รายปี').length;
+  document.getElementById('kpi-count').textContent = list.length + ' รายการ';
+}
+
+// ===== Render Table =====
+function renderTable(list) {
+  const tbody = document.getElementById('kpiTableBody');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty"><div style="font-size:2rem;margin-bottom:.5rem">📊</div>ยังไม่มีตัวชี้วัด</div></td></tr>';
+    return;
+  }
+  const freqClass = {'รายเดือน':'badge-blue','รายไตรมาส':'badge-orange','รายปี':'badge-green'};
+  tbody.innerHTML = list.map((k,i) => `
+    <tr>
+      <td style="color:var(--text3);font-size:13px">${i+1}</td>
+      <td><div style="font-weight:600;font-size:14px">${esc(k.kpi_name)}</div></td>
+      <td style="font-size:12px;color:var(--text2)">
+        ${k.kpi_dividend||k.kpi_divisor ? `
+          <span>${esc(k.kpi_dividend||'-')}</span><br>
+          <span style="color:var(--border)">──────</span><br>
+          <span>${esc(k.kpi_divisor||'-')}</span>
+        ` : '<span style="color:var(--text3)">-</span>'}
+      </td>
+      <td><span class="badge badge-green">${esc(k.kpi_decition)} ${k.kpi_target_value}</span></td>
+      <td><span class="badge ${freqClass[k.kpi_frequency]||'badge-blue'}">${esc(k.kpi_frequency||'-')}</span></td>
+      <td>
+        <div class="actions">
+          <button class="btn btn-edit" onclick="editKpi(${k.id})">✏️ แก้ไข</button>
+          <button class="btn btn-danger" onclick="deleteKpi(${k.id},'${esc(k.kpi_name)}')">🗑️ ลบ</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ===== Filter =====
+function filterTable(q) {
+  const filtered = kpiList.filter(k => k.kpi_name.toLowerCase().includes(q.toLowerCase()));
+  renderTable(filtered);
+}
+
+// ===== Edit =====
+function editKpi(id) {
+  const k = kpiList.find(x => x.id === id);
+  if (!k) return;
+  document.getElementById('kpi_id').value = k.id;
+  document.getElementById('kpi_name').value = k.kpi_name;
+  document.getElementById('kpi_dividend').value = k.kpi_dividend || '';
+  document.getElementById('kpi_divisor').value = k.kpi_divisor || '';
+  document.getElementById('kpi_decition').value = k.kpi_decition;
+  document.getElementById('kpi_target_value').value = k.kpi_target_value;
+  // set freq
+  const freqMap = {'รายเดือน':0,'รายไตรมาส':1,'รายปี':2};
+  const btns = document.querySelectorAll('.freq-btn');
+  btns.forEach(b => b.classList.remove('active'));
+  btns[freqMap[k.kpi_frequency]||0].classList.add('active');
+  selectedFreq = k.kpi_frequency || 'รายเดือน';
+  document.getElementById('form-title').innerHTML = '<i class="fas fa-edit"></i> แก้ไขตัวชี้วัด';
+  document.getElementById('saveBtn-text').textContent = 'บันทึกการแก้ไข';
+  document.getElementById('editBanner').classList.add('show');
+  document.getElementById('editName').textContent = k.kpi_name;
+  document.getElementById('kpi_name').focus();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ===== Save =====
+async function saveKpi() {
+  const id = document.getElementById('kpi_id').value;
+  const name = document.getElementById('kpi_name').value.trim();
+  const target = document.getElementById('kpi_target_value').value;
+
+  if (!name) { showAlert('กรุณากรอกชื่อตัวชี้วัด', 'error'); return; }
+  if (!target) { showAlert('กรุณากรอกค่าเป้าหมาย', 'error'); return; }
+
+  const payload = {
+    kpi_name: name,
+    kpi_dividend: document.getElementById('kpi_dividend').value.trim(),
+    kpi_divisor: document.getElementById('kpi_divisor').value.trim(),
+    kpi_decition: document.getElementById('kpi_decition').value,
+    kpi_target_value: parseFloat(target),
+    kpi_frequency: selectedFreq
+  };
+
+  try {
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `${API_BASE_URL}/kpi/${id}` : `${API_BASE_URL}/kpi/`;
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      showAlert(id ? 'แก้ไขตัวชี้วัดสำเร็จ' : 'เพิ่มตัวชี้วัดสำเร็จ');
+      resetForm();
+      loadKpis();
+    } else {
+      const err = await res.json();
+      showAlert(err.detail || 'เกิดข้อผิดพลาด', 'error');
+    }
+  } catch {
+    showAlert('ไม่สามารถเชื่อมต่อ Server ได้', 'error');
+  }
+}
+
+// ===== Delete =====
+async function deleteKpi(id, name) {
+  if (!confirm(`ลบตัวชี้วัด "${name}" ?\nจะลบการกำหนดทั้งหมดที่เกี่ยวข้องด้วย`)) return;
+  try {
+    const res = await fetch(`${API_BASE_URL}/kpi/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      showAlert('ลบตัวชี้วัดสำเร็จ');
+      loadKpis();
+    } else {
+      showAlert('ลบไม่สำเร็จ', 'error');
+    }
+  } catch {
+    showAlert('ไม่สามารถเชื่อมต่อ Server ได้', 'error');
+  }
+}
+
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Init
+loadKpis();
+</script>
+</body>
+</html>
